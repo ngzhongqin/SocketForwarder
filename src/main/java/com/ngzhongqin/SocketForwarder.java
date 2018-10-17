@@ -18,10 +18,15 @@ public class SocketForwarder {
                 Socket socket = listener.accept();
                 try {
 
-                    new ForwardSocket().forwardRequest("google.com",80,socket.getInputStream());
+                    String response = new ForwardSocket().forwardRequest("google.com",80,socket.getInputStream());
 
-                    String httpResponse = "HTTP/1.1 200 OK\r\n\r\n" + "hello";
-                    socket.getOutputStream().write(httpResponse.getBytes("UTF-8"));
+//                    String httpResponse = "HTTP/1.1 200 OK\r\n\r\n" + "hello";
+                    if(response!=null){
+                        socket.getOutputStream().write(response.getBytes("UTF-8"));
+                    }else{
+                        String httpResponse = "HTTP/1.1 404 OK\r\n\r\n" + " response is null ";
+                        socket.getOutputStream().write(httpResponse.getBytes("UTF-8"));
+                    }
 
                 } finally {
                     socket.close();
